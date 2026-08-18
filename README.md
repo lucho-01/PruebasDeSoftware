@@ -2,13 +2,13 @@
 Repositorio destinado a el desarrollo de el proyecto de pruebas de software
 
 ## Integrantes
-Luis José Ricardo
-Samuel Velasquez
-Maria Alejandra Hernandez
+Luis José Ricardo,
+Samuel Velasquez,
+Maria Alejandra Hernandez,
 Valentina Duque 
 
 ## Tecnologías
-React
-Nodejs
-Express
+React,
+Nodejs,
+Express,
 PostgreSQL
