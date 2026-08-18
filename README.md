@@ -8,7 +8,7 @@ Maria Alejandra Hernandez,
 Valentina Duque 
 
 ## Tecnologías
-React,
-Nodejs,
-Express,
-PostgreSQL
+- React
+- Nodejs
+- Express
+- PostgreSQL
