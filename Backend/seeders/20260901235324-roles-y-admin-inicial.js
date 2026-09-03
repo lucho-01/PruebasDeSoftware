@@ -1,0 +1,48 @@
+"use strict";
+
+const bcrypt = require("bcrypt");
+
+module.exports = {
+  async up(queryInterface) {
+    await queryInterface.bulkInsert("roles", [
+      {
+        nombre: "administrador",
+        descripcion: "Administrador del sistema",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        nombre: "gerente",
+        descripcion: "Gerente de ventas",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        nombre: "vendedor",
+        descripcion: "Vendedor",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
+    const [[admin]] = await queryInterface.sequelize.query(
+      "SELECT id FROM roles WHERE nombre = 'administrador'",
+    );
+    const hash = await bcrypt.hash("Admin123", 10);
+    await queryInterface.bulkInsert("usuarios", [
+      {
+        nombre: "Administrador Inicial",
+        correo: "admin@crm.local",
+        password_hash: hash,
+        rol_id: admin.id,
+        activo: true,
+        intentos_fallidos: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
+  },
+  async down(queryInterface) {
+    await queryInterface.bulkDelete("usuarios", null, {});
+    await queryInterface.bulkDelete("roles", null, {});
+  },
+};
