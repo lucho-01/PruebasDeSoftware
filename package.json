@@ -2,9 +2,8 @@
   "name": "apinodejs",
   "version": "1.0.0",
   "scripts": {
-    "start": "node Backend/app.js",
-    "dev": "nodemon Backend/Index.js",
-    "dev2": "nodemon Backend/app.js"
+    "start": "node Backend/Index.js",
+    "dev": "nodemon Backend/Index.js"
   },
   "keywords": [],
   "author": "",
