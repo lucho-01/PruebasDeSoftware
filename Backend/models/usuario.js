@@ -1,29 +1,21 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Usuario extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
-  }
-  Usuario.init({
-    nombre: DataTypes.STRING,
-    correo: DataTypes.STRING,
-    passwordHash: DataTypes.STRING,
-    rolId: DataTypes.INTEGER,
-    activo: DataTypes.BOOLEAN,
-    intentosFallidos: DataTypes.INTEGER,
-    bloqueadoHasta: DataTypes.DATE
-  }, {
-    sequelize,
-    modelName: 'Usuario',
-  });
-  return Usuario;
+ class Usuario extends Model {
+ static associate(models) {
+ Usuario.belongsTo(models.Rol, { foreignKey: 'rolId' });
+ }
+ }
+ Usuario.init({
+ nombre: { type: DataTypes.STRING(150), allowNull: false },
+ correo: { type: DataTypes.STRING(150), allowNull: false, unique: true },
+ passwordHash: { type: DataTypes.STRING(255), allowNull: false },
+ rolId: { type: DataTypes.INTEGER, allowNull: false },
+ activo: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
+ intentosFallidos: { type: DataTypes.INTEGER, allowNull: false, 
+defaultValue: 0 },
+ bloqueadoHasta: { type: DataTypes.DATE, allowNull: true },
+ }, { sequelize, modelName: 'Usuario', tableName: 'usuarios', underscored: 
+true });
+ return Usuario;
 };
