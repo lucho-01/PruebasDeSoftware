@@ -1,8 +1,10 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const { ok, fail } = require("./src/utils/apiResponse");
 const authService = require("./src/modules/auth/authService");
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.get("/ping", (req, res) => res.send("pong"));
 app.post("/auth/login", async (req, res) => {

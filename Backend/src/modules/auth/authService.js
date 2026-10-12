@@ -24,7 +24,7 @@ Intenta en ${minutos} minuto(s).`,
     const bloqueado = nuevosIntentos >= 5;
     await usuario.update({
       intentosFallidos: bloqueado ? 0 : nuevosIntentos,
-      bloqueadoHasta: bloqueado ? new Date(Date.now() + 5 * 60000) : null,
+      bloqueadoHasta: bloqueado ? new Date(Date.now() + 2 * 10000) : null,
     });
     throw {
       status: 401,

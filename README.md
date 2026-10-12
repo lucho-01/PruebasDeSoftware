@@ -49,12 +49,26 @@ npx sequelize-cli db:migrate
 npx sequelize-cli db:seed:all
 ```
 
-### 6. Iniciar el servidor
+### 6. Iniciar el servidor (backend)
 ```bash
 npm run dev
 ```
 
 El servidor arrancará en `http://localhost:3000`.
+
+### 7. Instalar y arrancar el frontend
+```bash
+cd PruebasSoftwareFrontend
+npm install
+npm run dev
+```
+
+El frontend arrancará en `http://localhost:5173` y al iniciar sesión con el usuario
+administrador redirige a `/dashboard/administrador`.
+
+**Credenciales del semillero:**
+- Correo: `admin@crm.local`
+- Contraseña: `Admin123`
 
 ## Ejecutar tests
 ```bash
@@ -72,4 +86,11 @@ Backend/
     ├── modules/
     │   └── auth/   # Servicio de autenticación (login)
     └── tests/      # Tests unitarios
+
+PruebasSoftwareFrontend/   # Frontend React + Vite
+└── src/
+    ├── api/            # Cliente axios hacia el backend
+    ├── context/        # AuthContext (token y usuario en localStorage)
+    ├── features/auth/  # LoginPage y estilos
+    └── styles/         # Design tokens
 ```
