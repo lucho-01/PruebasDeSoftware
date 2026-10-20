@@ -1,5 +1,6 @@
-import { createContext, useContext, useState } from "react";
-const AuthContext = createContext(null);
+import { useState } from "react";
+import { AuthContext } from "./useAuth";
+
 export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(() => {
     const guardado = localStorage.getItem("usuario");
@@ -15,8 +16,4 @@ export function AuthProvider({ children }) {
       {children}
     </AuthContext.Provider>
   );
-}
-// eslint-disable-next-line react-refresh/only-export-components -- context y hook van juntos a propósito
-export function useAuth() {
-  return useContext(AuthContext);
 }

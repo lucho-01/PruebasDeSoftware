@@ -23,3 +23,8 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# Reportes de pruebas
+coverage
+playwright-report
+test-results

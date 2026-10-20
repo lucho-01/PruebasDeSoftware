@@ -1,24 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../api/authApi';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import './LoginPage.css';
- 
+
 const RUTA_POR_ROL = {
-  administrador: '/dashboard/administrador',
+  administrador: '/dashboard/admin',
   gerente: '/dashboard/gerente',
   vendedor: '/dashboard/vendedor',
 };
- 
+
 function LoginPage() {
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
   const [mensaje, setMensaje] = useState('');
   const { iniciarSesion } = useAuth();
   const navigate = useNavigate();
- 
+
   const manejarEnvio = async (e) => {
-e.preventDefault();
+    e.preventDefault();
     try {
       const { token, usuario } = await login(correo, password);
       iniciarSesion(token, usuario);
@@ -27,19 +27,25 @@ e.preventDefault();
       setMensaje(error.response?.data?.error?.message || 'Error al iniciar sesión');
     }
   };
- 
+
   return (
     <div className="login-page">
       <div className="login-card">
-        <div className="login-brand">Pyme<span>Flow</span></div>
-        <p className="login-subtitle">Inicia sesión para continuar</p>
-        <form onSubmit={manejarEnvio} className="login-form">
+        <div className="login-brand">
+          CRM<span>Pyme</span>
+        </div>
+
+        <h1 className="login-title">Iniciar sesión</h1>
+        <p className="login-subtitle">Ingresa tus credenciales para continuar</p>
+
+        <form className="login-form" onSubmit={manejarEnvio}>
           <div>
             <label htmlFor="correo">Correo</label>
             <input
+              className="login-input"
               id="correo"
               type="email"
-              className="login-input"
+              placeholder="Digite Correo"
               value={correo}
               onChange={(e) => setCorreo(e.target.value)}
             />
@@ -47,19 +53,21 @@ e.preventDefault();
           <div>
             <label htmlFor="password">Contraseña</label>
             <input
+              className="login-input"
               id="password"
               type="password"
-              className="login-input"
+              placeholder="Digite Contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button type="submit" className="login-button">Ingresar</button>
+          <button className="login-button" type="submit">Login</button>
         </form>
+
         {mensaje && <p className="login-message">{mensaje}</p>}
       </div>
     </div>
   );
 }
- 
+
 export default LoginPage;
