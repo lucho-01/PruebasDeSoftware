@@ -40,9 +40,11 @@ Proyecto: CRM-Pyme · Guía Semana 11 · Docente: Jesús Albeiro Zuluaga Duque
 | CP-08 | Componente | 401: muestra "Correo o contraseña incorrectos" | CA-03 | `src/features/auth/LoginPage.test.jsx` | Verde |
 | CP-09 | Componente | 423: muestra el mensaje de cuenta bloqueada | CA-04 | `src/features/auth/LoginPage.test.jsx` | Verde |
 | CP-10 | Componente | Campos vacíos: muestra el mensaje de obligatorios | CA-05 | `src/features/auth/LoginPage.test.jsx` | Verde |
+| CP-11 | Componente | El mensaje de error anterior desaparece al iniciar sesión con éxito (actividad 5.3) | CA-03 (regresión) | `src/features/auth/LoginPage.test.jsx` | Verde |
+| CP-12 | Componente | El doble clic en Login no envía dos peticiones al backend (actividad 5.3) | Mejora DEF-002 | `src/features/auth/LoginPage.test.jsx` | Verde |
 | E2E-01 a E2E-03 | E2E | Flujo real en Chromium: éxito, error y correo inválido | CA-01, CA-02, CA-03 | `e2e/login.spec.js` | Verde |
 
-Resumen: **18 pruebas unitarias/de componente (Vitest + Testing Library) y 3 E2E (Playwright)**, cobertura 100 % en `authApi.js`, `AuthContext.jsx`, `useAuth.js` y `LoginPage.jsx`. Ninguna prueba depende del backend real ni de la base de datos: los mocks copian el formato de `apiResponse.js` (`{ success, data }` / `{ success, error: { code, message } }`).
+Resumen: **20 pruebas unitarias/de componente (Vitest + Testing Library) y 3 E2E (Playwright)**, cobertura 100 % en `authApi.js`, `AuthContext.jsx`, `useAuth.js` y `LoginPage.jsx`. CP-11 y CP-12 son casos añadidos por la actividad 5.3 de la guía. Ninguna prueba depende del backend real ni de la base de datos: los mocks copian el formato de `apiResponse.js` (`{ success, data }` / `{ success, error: { code, message } }`).
 
 ## 4. Reporte de defectos
 
@@ -63,3 +65,19 @@ Resumen: **18 pruebas unitarias/de componente (Vitest + Testing Library) y 3 E2E
 | Estado | Abierto → Corregido → **Verificado** (CP-08, CP-09, CP-10 y E2E-02 en verde; regresión 18/18) |
 
 Clasificación (vocabulario semana 1): el error humano fue suponer que `error` era un texto; el defecto es la línea del `catch`; la falla es la pantalla en blanco que ve el usuario. Es un defecto de integración: el backend y el frontend eran correctos por separado, pero estandarizar `apiResponse.js` cambió el formato sin re-probar el caso de error.
+
+### DEF-002 — El botón Login permite enviar el formulario dos veces con doble clic
+
+| Campo | Detalle |
+|-------|---------|
+| ID | DEF-002 |
+| Título | El botón Login permite enviar el formulario dos veces con doble clic |
+| Historia / criterio | HU-01 · mejora detectada por la actividad 5.3 (caso CP-12) |
+| Severidad / prioridad | Media / Media (no bloquea, pero duplica la petición y el guardado de sesión) |
+| Ambiente | Frontend React 19 + Vite, jsdom · detectado por CP-12 |
+| Pasos para reproducir | 1. Abrir http://localhost:5173 2. Llenar correo y contraseña 3. Hacer doble clic rápido en "Login" |
+| Resultado esperado | Se envía una sola petición al backend. |
+| Resultado obtenido | Se envían dos peticiones `/auth/login` con los mismos datos. |
+| Causa raíz | `LoginPage.jsx` no tenía estado de "envío en curso"; el botón permanecía activo mientras la petición estaba pendiente. |
+| Corrección | Estado `enviando`: el botón se deshabilita (`disabled={enviando}`) al enviar y se rehabilita en el `catch` si el login falla. |
+| Estado | Abierto → Corregido → **Verificado** (CP-12 en verde; regresión 20/20) |

@@ -78,6 +78,11 @@
 .login-button:hover {
   opacity: 0.92;
 }
+
+.login-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
  
 .login-message {
   margin-top: 16px;

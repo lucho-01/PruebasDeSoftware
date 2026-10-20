@@ -14,17 +14,20 @@ function LoginPage() {
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
   const [mensaje, setMensaje] = useState('');
+  const [enviando, setEnviando] = useState(false);
   const { iniciarSesion } = useAuth();
   const navigate = useNavigate();
 
   const manejarEnvio = async (e) => {
     e.preventDefault();
+    setEnviando(true);
     try {
       const { token, usuario } = await login(correo, password);
       iniciarSesion(token, usuario);
       navigate(RUTA_POR_ROL[usuario.rol] || '/');
     } catch (error) {
       setMensaje(error.response?.data?.error?.message || 'Error al iniciar sesión');
+      setEnviando(false);
     }
   };
 
@@ -61,7 +64,7 @@ function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button className="login-button" type="submit">Login</button>
+          <button className="login-button" type="submit" disabled={enviando}>Login</button>
         </form>
 
         {mensaje && <p className="login-message">{mensaje}</p>}

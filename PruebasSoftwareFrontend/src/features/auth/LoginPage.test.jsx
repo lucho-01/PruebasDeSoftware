@@ -153,3 +153,39 @@ describe('LoginPage — campos vacíos', () => {
     expect(await screen.findByText('Correo y contraseña son obligatorios')).toBeInTheDocument();
   });
 });
+
+
+describe('LoginPage — casos añadidos (actividad 5.3)', () => {
+  test('CP-11: el mensaje de error anterior desaparece al iniciar sesión con éxito', async () => {
+    login.mockRejectedValueOnce({
+      response: {
+        status: 401,
+        data: { success: false, error: { code: 'CREDENCIALES_INVALIDAS', message: 'Correo o contraseña incorrectos' } },
+      },
+    });
+    login.mockResolvedValueOnce({ token: 'jwt-falso', usuario: { id: 1, nombre: 'Admin', rol: 'administrador' } });
+    const user = renderizarLogin();
+
+    await llenarYEnviar(user, 'admin@crm.local', 'claveMala');
+    expect(await screen.findByText('Correo o contraseña incorrectos')).toBeInTheDocument();
+
+    await user.clear(screen.getByLabelText('Correo'));
+    await user.clear(screen.getByLabelText('Contraseña'));
+    await llenarYEnviar(user, 'admin@crm.local', 'Admin123*');
+    await screen.findByRole('heading', { name: 'Dashboard Admin' });
+    expect(screen.queryByText('Correo o contraseña incorrectos')).not.toBeInTheDocument();
+  });
+
+  test('CP-12: el doble clic en Login no envía dos peticiones al backend', async () => {
+    login.mockImplementation(() => new Promise(() => {}));
+    const user = renderizarLogin();
+
+    await user.type(screen.getByLabelText('Correo'), 'admin@crm.local');
+    await user.type(screen.getByLabelText('Contraseña'), 'Admin123*');
+    const boton = screen.getByRole('button', { name: 'Login' });
+    await user.click(boton);
+    await user.click(boton);
+
+    expect(login).toHaveBeenCalledTimes(1);
+  });
+});
