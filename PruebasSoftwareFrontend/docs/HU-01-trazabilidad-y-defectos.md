@@ -12,6 +12,9 @@ Proyecto: CRM-Pyme · Guía Semana 11 · Docente: Jesús Albeiro Zuluaga Duque
 | CA-04 | Dada una cuenta bloqueada por 5 intentos fallidos, entonces ve un mensaje con los minutos que debe esperar. |
 | CA-05 | Dados campos vacíos, entonces ve el mensaje "Correo y contraseña son obligatorios". |
 | CA-06 | Si el servidor no responde, el usuario ve un mensaje genérico y la aplicación no se rompe. |
+| CA-07 | Mientras se procesa el inicio de sesión, el botón se deshabilita y muestra el texto "Ingresando...". Un doble clic no debe enviar más de una petición. Si ocurre un error, el botón vuelve a habilitarse. |
+| CA-08 | Los mensajes de error se anuncian a las tecnologías de asistencia: el elemento que los muestra tiene el rol de alerta (`role="alert"`). |
+| CA-09 | Un usuario sin sesión que intenta abrir cualquier ruta `/dashboard/...` es redirigido a la página de login. |
 
 ## 2. Partición de equivalencia
 
@@ -42,6 +45,12 @@ Proyecto: CRM-Pyme · Guía Semana 11 · Docente: Jesús Albeiro Zuluaga Duque
 | CP-10 | Componente | Campos vacíos: muestra el mensaje de obligatorios | CA-05 | `src/features/auth/LoginPage.test.jsx` | Verde |
 | CP-11 | Componente | El mensaje de error anterior desaparece al iniciar sesión con éxito (actividad 5.3) | CA-03 (regresión) | `src/features/auth/LoginPage.test.jsx` | Verde |
 | CP-12 | Componente | El doble clic en Login no envía dos peticiones al backend (actividad 5.3) | Mejora DEF-002 | `src/features/auth/LoginPage.test.jsx` | Verde |
+| CP-13 | Componente | Botón disabled con texto "Ingresando..." mientras procesa (taller) | CA-07 | `src/features/auth/LoginPage.test.jsx` | Rojo → DEF-003 |
+| CP-14 | Componente | Doble clic envía una sola petición (taller) | CA-07 | `src/features/auth/LoginPage.test.jsx` | Verde (ya cubierto por DEF-002) |
+| CP-15 | Componente | Tras error, el botón vuelve a "Login" habilitado (taller) | CA-07 | `src/features/auth/LoginPage.test.jsx` | Verde |
+| CP-16 | Componente | El mensaje de error tiene role="alert" (taller) | CA-08 | `src/features/auth/LoginPage.test.jsx` | Rojo → DEF-004 |
+| E2E-04 | E2E | Sin sesión, /dashboard/admin redirige al login (taller) | CA-09 | `e2e/taller.spec.js` | Rojo → DEF-005 |
+| E2E-05 | E2E | Cuenta bloqueada 423 visible en navegador (taller) | CA-04 | `e2e/taller.spec.js` | Verde |
 | E2E-01 a E2E-03 | E2E | Flujo real en Chromium: éxito, error y correo inválido | CA-01, CA-02, CA-03 | `e2e/login.spec.js` | Verde |
 
 Resumen: **20 pruebas unitarias/de componente (Vitest + Testing Library) y 3 E2E (Playwright)**, cobertura 100 % en `authApi.js`, `AuthContext.jsx`, `useAuth.js` y `LoginPage.jsx`. CP-11 y CP-12 son casos añadidos por la actividad 5.3 de la guía. Ninguna prueba depende del backend real ni de la base de datos: los mocks copian el formato de `apiResponse.js` (`{ success, data }` / `{ success, error: { code, message } }`).

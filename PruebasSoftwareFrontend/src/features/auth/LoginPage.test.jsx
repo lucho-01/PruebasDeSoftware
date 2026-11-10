@@ -189,3 +189,58 @@ describe('LoginPage — casos añadidos (actividad 5.3)', () => {
     expect(login).toHaveBeenCalledTimes(1);
   });
 });
+
+
+describe('LoginPage — CA-07 y CA-08 (taller)', () => {
+  test('CP-13: mientras procesa, el botón queda disabled y dice "Ingresando..."', async () => {
+    login.mockReturnValue(new Promise(() => {}));
+    const user = renderizarLogin();
+
+    await llenarYEnviar(user, 'admin@crm.local', 'Admin123*');
+
+    const boton = screen.getByRole('button', { name: 'Ingresando...' });
+    expect(boton).toBeDisabled();
+  });
+
+  test('CP-14: el doble clic envía una sola petición', async () => {
+    login.mockReturnValue(new Promise(() => {}));
+    const user = renderizarLogin();
+    await user.type(screen.getByLabelText('Correo'), 'admin@crm.local');
+    await user.type(screen.getByLabelText('Contraseña'), 'Admin123*');
+
+    const boton = screen.getByRole('button', { name: 'Login' });
+    await user.dblClick(boton);
+
+    expect(login).toHaveBeenCalledTimes(1);
+  });
+
+  test('CP-15: si el login falla, el botón vuelve a "Login" y se habilita', async () => {
+    login.mockRejectedValue({
+      response: {
+        status: 401,
+        data: { success: false, error: { code: 'CREDENCIALES_INVALIDAS', message: 'Correo o contraseña incorrectos' } },
+      },
+    });
+    const user = renderizarLogin();
+
+    await llenarYEnviar(user, 'admin@crm.local', 'claveMala');
+    await screen.findByText('Correo o contraseña incorrectos');
+
+    const boton = screen.getByRole('button', { name: 'Login' });
+    expect(boton).toBeEnabled();
+  });
+
+  test('CP-16: el mensaje de error se anuncia como alerta (role="alert")', async () => {
+    login.mockRejectedValue({
+      response: {
+        status: 401,
+        data: { success: false, error: { code: 'CREDENCIALES_INVALIDAS', message: 'Correo o contraseña incorrectos' } },
+      },
+    });
+    const user = renderizarLogin();
+
+    await llenarYEnviar(user, 'admin@crm.local', 'claveMala');
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Correo o contraseña incorrectos');
+  });
+});
